@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.18'
 
 services:
   db:
@@ -9,17 +9,24 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     expose:
       - '5432'
     ports:
-      - '5432:5432'
+      - '5433:5432'
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
 
   django:
     container_name: sky_django
     build:
       context: .
     command: >
-      sh -c "python3 manage.py collectstatic --noinput &&
+      sh -c "python3 manage.py migrate &&
              exec gunicorn core.wsgi:application -b 0.0.0.0:8000 --reload"
     expose:
       - 8000
@@ -27,25 +34,31 @@ services:
       - '8001:8000'
     restart: always
     env_file:
-      - .env_dist
+      - .env
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   redis:
     image: "redis:alpine"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
 
   celery_worker:
     build: .
     command: celery -A core worker -l INFO
     depends_on:
-      - django
-      - redis
+      django:
+        condition: service_started
 
   celery_beat:
     build: .
     command: celery -A core beat -l INFO
     depends_on:
-      - celery_worker
-      - django
-      - redis
+      celery_worker:
+        condition: service_started
+
+volumes:
+  pg_data:
