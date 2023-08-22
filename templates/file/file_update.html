@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+{% block title %}
+    Обновить файл
+{% endblock %}
+{% block content %}
+    <h3>Обновить файл</h3>
+    <form method="post" class="col-5" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.filename }}
+
+        </div>
+        <div class="mb-4">
+            {{ form.file }}
+        </div>
+        <input class="btn btn-outline-success" type="submit" id="updateFile" value="Обновить"/>
+        {{ form.errors }}
+    </form>
+{% endblock %}

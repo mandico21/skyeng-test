@@ -1,0 +1,43 @@
+{% extends 'default.html' %}
+{% block title %}
+    Главная
+{% endblock %}
+{% block content %}
+    <div class="mb-3">
+        <a type="button"
+           class="btn btn-sm btn-success"
+           href="{% url 'files:file_add' %}">Добавить файл</a>
+    </div>
+
+    <table class="table table-hover table-sm">
+        <thead>
+        <tr class="table-success">
+            <th scope="col" class="col-3">Файл</th>
+            <th scope="col" class="col-3">Статус</th>
+            <th scope="col" class="col-3">Дата загрузки</th>
+            <th scope="col" class="col-1"></th>
+            <th scope="col" class="col-1"></th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+        {% for file in files %}
+            <tr>
+                <th scope="row">{{ file.filename }}</th>
+                <th scope="row">{{ file.get_status_display }}</th>
+                <th scope="row">{{ file.updated_at }}</th>
+                <td>
+                    <a class="btn btn-sm btn-primary"
+                       href="{% url 'files:file_detail' file.id %}"
+                    >Информация
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'files:file_update' file.id %}"
+                       class="btn btn-sm btn-warning">Перезаписать</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

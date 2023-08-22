@@ -1,0 +1,22 @@
+{% extends 'default.html' %}
+{% block title %}
+    Добавить файл
+{% endblock %}
+{% block content %}
+    <h3>Добавить файл</h3>
+    <form method="post" class="col-5" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="filename" class="form-label">Название файла</label>
+            <input type="text" class="form-control" id="filename" name="filename" aria-describedby="filename">
+
+        </div>
+        <div class="mb-3">
+            <label for="file" class="form-label">Загрузить файл</label>
+            <input type="file" accept=".py" class="form-control" name="file" id="file" aria-describedby="file">
+            <div id="fileHelp" class="form-text">Поддерживается только файлы с разрешением: <b>.py</b></div>
+        </div>
+        <input class="btn btn-outline-success" type="submit" id="addFile" value="Добавить файл"/>
+        {{ form.errors }}
+    </form>
+{% endblock %}

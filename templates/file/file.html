@@ -1,0 +1,52 @@
+{% extends 'default.html' %}
+{% block title %}
+    {{ file.filename }}
+{% endblock %}
+{% block content %}
+    <h5>Файл: {{ file.filename }}</h5>
+    <h5>Статус: {{ file.get_status_display }}</h5>
+    {% if file.file_reports.first %}
+        <div class="mb-3">
+            <label for="disabledTextInput" class="form-label">Результат проверки</label>
+            <textarea id="disabledTextInput"
+                   class="form-control"
+                   style="min-height: 200px;"
+                   disabled
+                   placeholder="{{ file.file_reports.first.result }}"></textarea>
+        </div>
+        <h6>Дата проверки: {{ file.file_reports.first.verification_at }}</h6>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled"
+                    {% if file.file_reports.first.is_notified %} checked {% endif %} disabled>
+            <label class="form-check-label" for="flexCheckCheckedDisabled">
+                Оповещение на почту отправлено
+            </label>
+        </div>
+    {% else %}
+        <h5>Файл еще не был проверен</h5>
+    {% endif %}
+    <div class="button__block mt-3">
+        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Удалить
+        </button>
+
+    </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Удалить файл</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    Вы действительно хотите удалить файл?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                    <a type="button" class="btn btn-primary" href="{% url 'files:file_delete' file.id %}">Да</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

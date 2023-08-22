@@ -1,0 +1,41 @@
+{% extends 'auth.html' %}
+{% block content %}
+    <form class="vh-100" style="background-color: #508bfc;" method="post">
+        {% csrf_token %}
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+
+                            <h3 class="mb-5">Регистрация</h3>
+
+                            <div class="form-outline mb-4">
+                                <input type="text" id="username" name="username" class="form-control"/>
+                                <label class="form-label" for="username">Имя пользователя</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="email" id="email" name="email" class="form-control"/>
+                                <label class="form-label" for="email">Email</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="password" id="pwd" name="password1" class="form-control"/>
+                                <label class="form-label" for="pwd">Пароль</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="password" id="pwd2" name="password2" class="form-control"/>
+                                <label class="form-label" for="pwd2">Повторный пароль</label>
+                            </div>
+
+                            <button class="btn btn-success btn-block" type="submit">Зарегистрироваться</button>
+                            {{ form.errors }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
